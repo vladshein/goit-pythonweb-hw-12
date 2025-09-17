@@ -70,7 +70,7 @@ class ContactRepository:
         self.db.add(contact)
         await self.db.commit()
         await self.db.refresh(contact)
-        return await self.get_contact_by_id(contact.id)
+        return contact
 
     async def remove_contact(self, contact_id: int, user: User) -> Contact | None:
         """
@@ -90,20 +90,20 @@ class ContactRepository:
         return contact
 
     async def update_contact(
-        self, note_id: int, body: ContactModel, user: User
+        self, contact_id: int, body: ContactModel, user: User
     ) -> Contact | None:
         """
         Update a contact by its ID.
 
         Args:
-            note_id (int): Contact ID to update.
+            contact_id (int): Contact ID to update.
             body (ContactModel): Contact data to update contact with.
             user (User): Current user.
 
         Returns:
             Contact | None: Updated contact, or None if not found.
         """
-        contact = await self.get_contact_by_id(note_id, user)
+        contact = await self.get_contact_by_id(contact_id, user)
         if contact:
             for key, value in body.dict(exclude_unset=True).items():
                 setattr(contact, key, value)

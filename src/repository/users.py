@@ -65,7 +65,6 @@ class UserRepository:
             **body.model_dump(exclude_unset=True, exclude={"password"}),
             hashed_password=body.password,
             avatar=avatar,
-            role=body.role,
         )
         self.db.add(user)
         await self.db.commit()

@@ -1,0 +1,18 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.2, pytest-8.4.2, pluggy-1.6.0 -- C:\Users\User\AppData\Local\pypoetry\Cache\virtualenvs\goit-pythonweb-hw-12-DrKEu7vz-py3.13\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\goit_homeworks\PythonBackEnd\goit-pythonweb-hw-12
+configfile: pyproject.toml
+plugins: anyio-4.10.0, asyncio-1.2.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 7 items
+
+tests/test_integration_auth.py::test_signup PASSED                       [ 14%]
+tests/test_integration_auth.py::test_repeat_signup PASSED                [ 28%]
+tests/test_integration_auth.py::test_not_confirmed_login PASSED          [ 42%]
+tests/test_integration_auth.py::test_login PASSED                        [ 57%]
+tests/test_integration_auth.py::test_wrong_password_login PASSED         [ 71%]
+tests/test_integration_auth.py::test_wrong_username_login PASSED         [ 85%]
+tests/test_integration_auth.py::test_validation_error_login PASSED       [100%]
+
+============================== 7 passed in 2.16s ==============================
