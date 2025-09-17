@@ -9,6 +9,13 @@ router = APIRouter(tags=["utils"])
 
 @router.get("/healthchecker")
 async def healthchecker(db: AsyncSession = Depends(get_db)):
+    """
+    Healthchecker endpoint.
+
+    Checks the connection to the database. If the connection is successful,
+    returns a welcome message. If the connection fails, raises an HTTPException
+    with a 500 status code and a detail message indicating the error.
+    """
     try:
         # Виконуємо асинхронний запит
         result = await db.execute(text("SELECT 1"))

@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     USE_CREDENTIALS: bool = True
     VALIDATE_CERTS: bool = True
 
-    CLD_NAME: str
+    CLD_NAME: str = "default"
     CLD_API_KEY: int = 326488457974591
     CLD_API_SECRET: str = "secret"
 
