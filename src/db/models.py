@@ -37,6 +37,8 @@ class Contact(Base):
     user_id = Column(
         "user_id", ForeignKey("users.id", ondelete="CASCADE"), default=None
     )
+
+    created_at = Column(DateTime, default=func.now())
     user = relationship("User", backref="contacts")
 
 

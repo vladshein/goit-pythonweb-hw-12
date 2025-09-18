@@ -85,7 +85,6 @@ async def get_contact(
 @router.post("/", response_model=ContactResponse, status_code=status.HTTP_201_CREATED)
 async def add_contact(
     body: ContactModel,
-    contact_id: int,
     db: AsyncSession = Depends(get_db),
     user: User = Depends(get_current_user),
 ):
@@ -162,7 +161,7 @@ async def update_contact(
     contact = await contact_service.update_contact(contact_id, body, user)
     if contact is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Note not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Contact not found"
         )
     return contact
 

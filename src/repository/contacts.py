@@ -66,7 +66,7 @@ class ContactRepository:
         Returns:
             Contact: Created contact.
         """
-        contact = Contact(**body.model_dump(exclude_unset=True), user=user)
+        contact = Contact(**body.model_dump(exclude_unset=True), user_id=user.id)
         self.db.add(contact)
         await self.db.commit()
         await self.db.refresh(contact)

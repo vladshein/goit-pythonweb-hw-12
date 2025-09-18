@@ -14,8 +14,8 @@ class ContactModel(BaseModel):
 
 class ContactResponse(ContactModel):
     id: int
-    model_config = ConfigDict(from_attributes=True)
     created_at: datetime
+    model_config = ConfigDict(from_attributes=True)
 
 
 # Схема користувача
