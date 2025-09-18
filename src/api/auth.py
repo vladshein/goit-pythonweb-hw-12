@@ -9,17 +9,27 @@ from fastapi import (
 )
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
-from src.schemas.contacts import UserCreate, Token, User, RequestEmail
+from src.schemas.contacts import (
+    UserCreate,
+    Token,
+    User,
+    RequestEmail,
+    PasswordResetToken,
+    ResetPasswordSchema,
+)
 from src.services.auth import (
     create_access_token,
     Hash,
     get_email_from_token,
     get_current_moderator_user,
     get_current_admin_user,
+    create_password_reset_token,
+    decode_password_reset_token,
+    reset_user_password,
 )
 from src.services.users import UserService
 from src.db.connection import get_db
-from src.services.email import send_email
+from src.services.email import send_email, send_password_reset_email
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -207,4 +217,26 @@ def read_admin(current_user: User = Depends(get_current_admin_user)):
     :return: повідомлення з привітанням для адміністраторів
     :rtype: dict
     """
-    return {"message": f"Вітаємо, {current_user.username}! Це адміністративний маршрут"}
+    return {"message": f"Вітаємо! Це адміністративний маршрут"}
+
+
+@router.post("/request-password-reset")
+async def request_password_reset(body: RequestEmail, db: Session = Depends(get_db)):
+    user_service = UserService(db)
+    user = await user_service.get_user_by_email(body.email)
+    if not user or not user.confirmed:
+        raise HTTPException(
+            status_code=404, detail="Користувача не знайдено або не підтверджено"
+        )
+
+    token = create_password_reset_token(user.email)
+    await send_password_reset_email(user.email, token)
+    return {"message": "Інструкції надіслано на email"}
+
+
+@router.post("/reset-password")
+async def reset_password(body: ResetPasswordSchema, db: Session = Depends(get_db)):
+    email = decode_password_reset_token(body.token)
+    hashed_password = Hash().get_password_hash(body.new_password)
+    await reset_user_password(db, email, hashed_password)
+    return {"message": "Пароль успішно оновлено"}

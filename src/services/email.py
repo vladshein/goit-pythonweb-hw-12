@@ -51,3 +51,13 @@ async def send_email(email: EmailStr, username: str, host: str):
         await fm.send_message(message, template_name="verify_email.html")
     except ConnectionErrors as err:
         print(err)
+
+
+async def send_password_reset_email(email: str, token: str):
+    reset_link = f"https://yourdomain.com/reset-password?token={token}"
+    # Використай SMTP або сторонній сервіс (SendGrid, Mailgun)
+    await send_email(
+        to=email,
+        subject="Скидання пароля",
+        body=f"Натисніть на посилання для скидання пароля: {reset_link}",
+    )

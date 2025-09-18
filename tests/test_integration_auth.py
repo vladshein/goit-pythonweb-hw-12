@@ -162,3 +162,44 @@ def test_request_email_already_confirmed(client):
     assert response.status_code == 200, response.text
     data = response.json()
     assert data["message"] == "Ваша електронна пошта вже підтверджена"
+
+
+def test_request_password_reset(client, get_token):
+    response = client.post(
+        "/auth/request-password-reset", json={"email": "test@example.com"}
+    )
+    assert response.status_code == 404
+
+
+def test_reset_password(client, monkeypatch):
+    mock_token = "mocked.jwt.token"
+    mock_create_token = Mock(return_value=mock_token)
+
+    monkeypatch.setattr(
+        "src.services.auth.create_password_reset_token", mock_create_token
+    )
+
+    response = client.post(
+        "/auth/reset-password",
+        json={"token": mock_token, "new_password": "newsecurepass"},
+    )
+
+    assert response.status_code == 404
+
+
+def test_read_admin_route(client, monkeypatch):
+    class MockAdminUser:
+        username = "admin"
+        role = "admin"
+
+    # Підміна залежності get_current_admin_user
+    monkeypatch.setattr("src.api.auth.get_current_admin_user", lambda: MockAdminUser())
+
+    response = client.get("api/auth/admin")
+    assert response.status_code == 401
+
+
+def test_read_public_route(client):
+    response = client.get("api/auth/public")
+    assert response.status_code == 200
+    assert response.json() == {"message": "Це публічний маршрут, доступний для всіх"}

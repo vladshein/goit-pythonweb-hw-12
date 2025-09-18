@@ -136,3 +136,4 @@ class ContactRepository:
         )
         contacts = await self.db.execute(stmt)
         return contacts.scalars().all()
+

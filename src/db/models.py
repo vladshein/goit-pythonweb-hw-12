@@ -55,3 +55,6 @@ class User(Base):
     role = Column(
         SqlEnum(UserRole, name="userrole"), default=UserRole.USER, nullable=False
     )
+
+
+

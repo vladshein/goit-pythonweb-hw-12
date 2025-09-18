@@ -199,3 +199,28 @@ async def get_current_admin_user(current_user: User = Depends(get_current_user))
     if current_user.role != UserRole.ADMIN:
         raise HTTPException(status_code=403, detail="Недостатньо прав доступу")
     return current_user
+
+
+async def create_password_reset_token(email: str) -> str:
+    expire = datetime.now() + timedelta(hours=1)
+    to_encode = {"email": email, "exp": expire}
+    return jwt.encode(to_encode, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
+
+
+async def decode_password_reset_token(token: str) -> str:
+    try:
+        payload = jwt.decode(
+            token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM]
+        )
+        return payload.get("email")
+    except JWTError:
+        raise HTTPException(status_code=400, detail="Невалідний або прострочений токен")
+
+
+async def reset_user_password(
+    new_password: str,
+    email: str,
+    db: Session = Depends(get_db),
+):
+    user_service = UserService(db)
+    await user_service.update_password(email, new_password)

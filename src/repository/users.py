@@ -101,3 +101,10 @@ class UserRepository:
         await self.db.commit()
         await self.db.refresh(user)
         return user
+
+    async def update_password(self, email, hashed_password):
+        user = await self.get_user_by_email(email)
+        user.hashed_password = hashed_password
+        self.db.add(user)
+        await self.db.commit()
+        await self.db.refresh(user)

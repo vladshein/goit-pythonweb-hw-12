@@ -45,3 +45,17 @@ class Token(BaseModel):
 
 class RequestEmail(BaseModel):
     email: EmailStr
+
+
+class PasswordResetToken(BaseModel):
+    email: EmailStr
+    exp: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class ResetPasswordSchema(BaseModel):
+    token: str
+    new_password: str = Field(min_length=8)
+
+    model_config = ConfigDict(from_attributes=True)

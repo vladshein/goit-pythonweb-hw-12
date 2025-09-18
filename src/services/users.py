@@ -94,3 +94,16 @@ class UserService:
             None
         """
         return await self.repository.update_avatar_url(email, url)
+
+    async def update_password(self, email: str, hashed_password: str):
+        """
+        Update avatar URL of the user.
+
+        Args:
+            email (str): Email address of the user to update.
+            url (str): New avatar URL of the user.
+
+        Returns:
+            None
+        """
+        return await self.repository.update_password(email, hashed_password)
