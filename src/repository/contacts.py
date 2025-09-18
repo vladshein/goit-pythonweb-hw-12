@@ -132,7 +132,7 @@ class ContactRepository:
                 extract("month", Contact.birthday) <= future_date.month,
                 extract("day", Contact.birthday) <= future_date.day,
             ),
-            user=user,
+            Contact.user == user,
         )
         contacts = await self.db.execute(stmt)
         return contacts.scalars().all()

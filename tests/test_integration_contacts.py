@@ -100,3 +100,19 @@ def test_repeat_delete_contact(client, get_token):
     assert response.status_code == 404, response.text
     data = response.json()
     assert data["detail"] == "Requested contact not found"
+
+
+#####
+def test_get_contacts_with_bds(client, get_token):
+    response = client.get(
+        "/api/contacts/upcoming_birthdays/",
+        headers={"Authorization": f"Bearer {get_token}"},
+    )
+    assert response.status_code == 200
+    data = response.json()
+
+    assert isinstance(data, list)
+    if data:
+        assert "first_name" in data[0]
+    else:
+        print("No contacts with birthdays in the given range.")

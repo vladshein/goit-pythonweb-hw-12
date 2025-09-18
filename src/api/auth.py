@@ -152,6 +152,8 @@ async def request_email(
     """
     user_service = UserService(db)
     user = await user_service.get_user_by_email(body.email)
+    if not user:
+        raise HTTPException(status_code=404, detail="User with this email not found")
 
     if user.confirmed:
         return {"message": "Ваша електронна пошта вже підтверджена"}
